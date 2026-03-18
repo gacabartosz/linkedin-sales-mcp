@@ -1,0 +1,30 @@
+{
+  "name": "linkedin-sales-mcp",
+  "version": "1.0.0",
+  "description": "Remote MCP server for LinkedIn Sales Intelligence — search, monitor competitors, classify buying signals. Connects to claude.ai via Streamable HTTP + OAuth 2.1.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/server.ts",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "better-sqlite3": "^11.0.0",
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

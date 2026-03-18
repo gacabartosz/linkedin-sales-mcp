@@ -1,0 +1,32 @@
+services:
+  mcp-linkedin:
+    build: .
+    container_name: mcp-linkedin
+    restart: unless-stopped
+    volumes:
+      - mcp-linkedin-data:/data
+    environment:
+      - DATA_DIR=/data/.linkedin-mcp
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - OAUTH_SECRET=${OAUTH_SECRET}
+      - OAUTH_APPROVE_SECRET=${OAUTH_APPROVE_SECRET}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID:-}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET:-}
+      - PUBLIC_URL=https://mcp-linkedin.bartoszgaca.pl
+      - PORT=3100
+      - HOST=0.0.0.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mcp-linkedin.rule=Host(`mcp-linkedin.bartoszgaca.pl`)"
+      - "traefik.http.routers.mcp-linkedin.entrypoints=websecure"
+      - "traefik.http.routers.mcp-linkedin.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mcp-linkedin.loadbalancer.server.port=3100"
+    networks:
+      - traefik-net
+
+volumes:
+  mcp-linkedin-data:
+
+networks:
+  traefik-net:
+    external: true
