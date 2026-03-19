@@ -12,21 +12,21 @@ services:
       - OAUTH_APPROVE_SECRET=${OAUTH_APPROVE_SECRET}
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID:-}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET:-}
-      - PUBLIC_URL=https://ai.beecommerce.pl
+      - PUBLIC_URL=https://mcp-linkedin.bartoszgaca.pl
       - PORT=3100
       - HOST=0.0.0.0
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mcp-linkedin.rule=Host(`ai.beecommerce.pl`)"
+      - "traefik.http.routers.mcp-linkedin.rule=Host(`mcp-linkedin.bartoszgaca.pl`)"
       - "traefik.http.routers.mcp-linkedin.entrypoints=websecure"
       - "traefik.http.routers.mcp-linkedin.tls.certresolver=letsencrypt"
       - "traefik.http.services.mcp-linkedin.loadbalancer.server.port=3100"
     networks:
-      - traefik-net
+      - traefik-public
 
 volumes:
   mcp-linkedin-data:
 
 networks:
-  traefik-net:
+  traefik-public:
     external: true

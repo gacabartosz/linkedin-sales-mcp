@@ -37,11 +37,31 @@ class SqliteClientsStore implements OAuthRegisteredClientsStore {
   registerClient(
     client: Omit<OAuthClientInformationFull, "client_id" | "client_id_issued_at">,
   ): OAuthClientInformationFull {
-    const registered = store.registerClient({
-      client_name: client.client_name,
-      redirect_uris: client.redirect_uris,
-    });
-    return this.getClient(registered.client_id)!;
+    // SDK pre-generates client_id/secret when clientIdGeneration=true
+    // The runtime object may have these fields despite the TypeScript Omit type
+    const fullClient = client as OAuthClientInformationFull;
+    const clientId = fullClient.client_id || undefined;
+    const clientSecret = fullClient.client_secret || undefined;
+
+    try {
+      const registered = store.registerClient({
+        client_id: clientId,
+        client_secret: clientSecret,
+        client_name: client.client_name,
+        redirect_uris: client.redirect_uris,
+        client_secret_expires_at: fullClient.client_secret_expires_at,
+      });
+      const result = this.getClient(registered.client_id);
+      if (!result) {
+        log("error", `registerClient: saved but getClient returned null for ${registered.client_id}`);
+        throw new Error("Failed to read back registered client");
+      }
+      log("info", `Client registered: ${result.client_id}`);
+      return result;
+    } catch (err) {
+      log("error", `registerClient failed: ${(err as Error).message}`, (err as Error).stack);
+      throw err;
+    }
   }
 }
 

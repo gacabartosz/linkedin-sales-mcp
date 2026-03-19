@@ -48,6 +48,7 @@ async function main(): Promise<void> {
   ensureDataDirs();
 
   const app = express();
+  app.set("trust proxy", 1);  // Behind 1 reverse proxy (Traefik)
   app.use(cors());
   app.use(express.json());
 

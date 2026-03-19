@@ -99,23 +99,27 @@ export function getClient(clientId: string): StoredClient | null {
 }
 
 export function registerClient(data: {
+  client_id?: string;
+  client_secret?: string;
   client_name?: string;
   redirect_uris?: string[];
+  client_secret_expires_at?: number;
 }): StoredClient {
   const db = getOAuthDb();
-  const clientId = randomUUID();
-  const clientSecret = randomBytes(32).toString("hex");
+  const clientId = data.client_id || randomUUID();
+  const clientSecret = data.client_secret || randomBytes(32).toString("hex");
   const now = Math.floor(Date.now() / 1000);
 
   db.prepare(`
-    INSERT INTO oauth_clients (client_id, client_secret, client_name, redirect_uris, client_id_issued_at)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO oauth_clients (client_id, client_secret, client_name, redirect_uris, client_id_issued_at, client_secret_expires_at)
+    VALUES (?, ?, ?, ?, ?, ?)
   `).run(
     clientId,
     clientSecret,
     data.client_name || "Dynamic Client",
     JSON.stringify(data.redirect_uris || []),
     now,
+    data.client_secret_expires_at || 0,
   );
 
   log("info", `Registered OAuth client: ${clientId} (${data.client_name})`);
