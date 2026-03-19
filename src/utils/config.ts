@@ -21,7 +21,7 @@ export const config = {
   // Server
   serverPort: parseInt(process.env.PORT || "3100", 10),
   serverHost: process.env.HOST || "0.0.0.0",
-  publicUrl: process.env.PUBLIC_URL || "https://ai.bartoszgaca.pl",
+  publicUrl: process.env.PUBLIC_URL || "https://mcp-linkedin.ai.beecommerce.pl",
 
   // LinkedIn Voyager (not used — kept for compatibility with copied scraper code)
   linkedinClientId: "",
